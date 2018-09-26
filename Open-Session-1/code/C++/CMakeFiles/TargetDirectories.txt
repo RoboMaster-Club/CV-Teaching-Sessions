@@ -1,3 +1,0 @@
-/home/why/CV-Teaching-Sessions/Open-Session-1/code/C++/CMakeFiles/rebuild_cache.dir
-/home/why/CV-Teaching-Sessions/Open-Session-1/code/C++/CMakeFiles/edit_cache.dir
-/home/why/CV-Teaching-Sessions/Open-Session-1/code/C++/CMakeFiles/Lecture1.dir
