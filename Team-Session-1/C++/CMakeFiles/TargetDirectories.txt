@@ -1,0 +1,4 @@
+/home/why/CV-Teaching-Sessions/Team-Session-1/C++/CMakeFiles/rebuild_cache.dir
+/home/why/CV-Teaching-Sessions/Team-Session-1/C++/CMakeFiles/fit_ellipse.dir
+/home/why/CV-Teaching-Sessions/Team-Session-1/C++/CMakeFiles/edit_cache.dir
+/home/why/CV-Teaching-Sessions/Team-Session-1/C++/CMakeFiles/gamma-correction.dir
