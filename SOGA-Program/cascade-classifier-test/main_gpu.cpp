@@ -21,7 +21,7 @@ Ptr<cuda::CascadeClassifier> cascade = cuda::CascadeClassifier::create(
 int main(int argc, const char **argv) {
     VideoCapture capture;
     //-- 2. Read the video stream
-    capture.open("./robot_blue_3m.mp4");
+    capture.open("./robot_blue_3m_480p.mp4");
     if (!capture.isOpened()) {
         cout << "--(!)Error opening video capture\n";
         return -1;
