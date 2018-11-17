@@ -1,6 +1,6 @@
-#ifndef _MYBLUR_GPU_H_
-#define _MYBLUR_GPU_H_
+#ifndef _BLUR_GPU_H_
+#define _BLUR_GPU_H_
 
-void myBlur_gpu(InputArray src, OutputArray dst, Size ksize);
+void blur_gpu(InputArray src, OutputArray dst, Size ksize);
 
 #endif
