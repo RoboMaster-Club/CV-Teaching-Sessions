@@ -26,4 +26,3 @@ void inRange_gpu(cv::cuda::GpuMat &src, cv::Scalar lowerb, cv::Scalar upperb,
   inRange_kernel<<<gridSize, blockSize>>>(src, dst, lowerb[0], upperb[0], lowerb[1], upperb[1],
                                           lowerb[2], upperb[2]);
 }
-
