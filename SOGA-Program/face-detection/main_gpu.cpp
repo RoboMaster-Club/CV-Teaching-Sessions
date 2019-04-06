@@ -4,7 +4,7 @@
 
 using namespace std;
 using namespace cv;
-void detectAndDisplay( Mat frame );
+void detectAndDisplay( Mat frame, rs2::depth_frame & depth );
 Ptr<cuda::CascadeClassifier> face_cascade = cuda::CascadeClassifier::create(
         "./haarcascade_frontalface_alt.xml");
 Ptr<cuda::CascadeClassifier> eyes_cascade = cuda::CascadeClassifier::create(
@@ -31,7 +31,7 @@ int main( int argc, const char** argv )
     while ( frame.data )
     {
         //-- 2. Apply the classifier to the frame
-        detectAndDisplay( frame );
+        detectAndDisplay(frame, depth);
         if( waitKey(1) == 27 )
         {
             break; // escape
@@ -44,11 +44,14 @@ int main( int argc, const char** argv )
     }
     endTime = clock();
     std::cout << "GPU Performance: " << frameCount / ((double) (endTime - startTime) / CLOCKS_PER_SEC) << "FPS" << std::endl;
+    pipe.stop();
+    cfg.disable_stream(RS2_STREAM_DEPTH);
+    cfg.disable_stream(RS2_STREAM_COLOR);
     return 0;
 }
 
 /** @function detectAndDisplay */
-void detectAndDisplay(Mat frame) {
+void detectAndDisplay(Mat frame, rs2::depth_frame & depth) {
     Size size = frame.size();
     int type = frame.type();
 
@@ -63,11 +66,15 @@ void detectAndDisplay(Mat frame) {
     face_cascade->detectMultiScale(frame_gray, results_gpu);
     face_cascade->convert(results_gpu, faces);
 
-#ifndef NDEBUG
 
     for (size_t i = 0; i < faces.size(); i++) {
         Point center(faces[i].x + faces[i].width / 2, faces[i].y + faces[i].height / 2);
         ellipse(frame, center, Size(faces[i].width / 2, faces[i].height / 2), 0, 0, 360, Scalar(255, 0, 255), 4);
+	//calculate distance
+	float distance = depth.get_distance(center.x, center.y);
+	putText(frame, to_string(distance) + " m", Point(center.x, center.y),
+                        FONT_HERSHEY_SIMPLEX,
+                        1, Scalar(255, 0, 255), 2);
 	cuda::GpuMat faceROI = frame_gray( faces[i] );
         //-- In each face, detect eyes
         std::vector<Rect> eyes;
@@ -84,5 +91,4 @@ void detectAndDisplay(Mat frame) {
     //-- Show what you got
     imshow("Capture - Face detection", frame);
 
-#endif
 }

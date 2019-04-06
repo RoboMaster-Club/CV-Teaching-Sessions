@@ -3,7 +3,7 @@
 #include <iostream>
 using namespace std;
 using namespace cv;
-void detectAndDisplay( Mat frame );
+void detectAndDisplay( Mat frame, rs2::depth_frame & depth );
 CascadeClassifier face_cascade("./haarcascade_frontalface_alt.xml");
 CascadeClassifier eyes_cascade("./haarcascade_eye_tree_eyeglasses.xml");
 int main( int argc, const char** argv )
@@ -28,7 +28,7 @@ int main( int argc, const char** argv )
     while ( frame.data )
     {
         //-- 2. Apply the classifier to the frame
-        detectAndDisplay( frame );
+        detectAndDisplay( frame, depth );
         if( waitKey(1) == 27 )
         {
             break; // escape
@@ -41,9 +41,12 @@ int main( int argc, const char** argv )
     }
     endTime = clock();
     std::cout << "CPU Performance: " << frameCount / ((double) (endTime - startTime) / CLOCKS_PER_SEC) << "FPS" << std::endl;
+    pipe.stop();
+    cfg.disable_stream(RS2_STREAM_DEPTH);
+    cfg.disable_stream(RS2_STREAM_COLOR);
     return 0;
 }
-void detectAndDisplay( Mat frame )
+void detectAndDisplay( Mat frame, rs2::depth_frame & depth )
 {
     Mat frame_gray;
     cvtColor( frame, frame_gray, COLOR_BGR2GRAY );
@@ -55,6 +58,10 @@ void detectAndDisplay( Mat frame )
     {
         Point center( faces[i].x + faces[i].width/2, faces[i].y + faces[i].height/2 );
         ellipse( frame, center, Size( faces[i].width/2, faces[i].height/2 ), 0, 0, 360, Scalar( 255, 0, 255 ), 4 );
+	float distance = depth.get_distance(center.x, center.y);
+	putText(frame, to_string(distance) + " m", Point(center.x, center.y),
+                        FONT_HERSHEY_SIMPLEX,
+                        1, Scalar(255, 0, 255), 2);
         Mat faceROI = frame_gray( faces[i] );
         //-- In each face, detect eyes
         std::vector<Rect> eyes;
