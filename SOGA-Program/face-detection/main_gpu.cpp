@@ -44,6 +44,9 @@ int main( int argc, const char** argv )
     }
     endTime = clock();
     std::cout << "GPU Performance: " << frameCount / ((double) (endTime - startTime) / CLOCKS_PER_SEC) << "FPS" << std::endl;
+    pipe.stop();
+    cfg.disable_stream(RS2_STREAM_DEPTH);
+    cfg.disable_stream(RS2_STREAM_COLOR);
     return 0;
 }
 
